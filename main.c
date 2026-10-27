@@ -4,26 +4,29 @@
 
 int main(void)
 {
-    int *a = mymalloc(sizeof(int));
-    int *b = mymalloc(sizeof(int));
+    void *a = mymalloc(16);
 
-    if (a == NULL || b == NULL)
-    {
-        return 1;
-    }
-
-    *a = 42;
-    *b = 100;
-    
-    if (*a != 42 || *b != 100)
+    if (a == NULL)
     {
         return 1;
     }
 
     myfree(a);
-    myfree(b);
 
-    write(STDOUT_FILENO, "allocation and free successful\n", 31);
+    void *b = mymalloc(8);
+
+    if (b == NULL)
+    {
+        return 1;
+    }
+
+    if (a != b)
+    {
+        write(STDOUT_FILENO, "reuse failed!\n", 13);
+        return 1;
+    }
+
+    write(STDOUT_FILENO, "memory reuse successful\n", 24);
 
     return 0;
 }
